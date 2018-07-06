@@ -1,0 +1,7 @@
+.gitingore
+.env
+settings.json
+*.pyc
+__pycache__/
+.cache
+.pytest_cache/

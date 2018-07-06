@@ -2,12 +2,13 @@ from flask import Flask
 from flask_restful import Api
 from flask_migrate import Migrate
 
-from models import db
+from .models import db
+from .resources.todos import TodoList
 from config import app_config
 import os
 
 
-def create_app(environment):
+def create_flask_app(environment):
     app = Flask(__name__)
     app.config.from_object(app_config[environment])
     db.init_app(app)
@@ -17,13 +18,10 @@ def create_app(environment):
     @app.route('/')
     def hello_world():
         return 'Hello, World!'
+
+    api.add_resource(TodoList, "/api/todos")
     
     return app
 
-# if __name__ == "__main__":
-#     app = create_app(os.getenv('environment'))
-#     app.run()
-
-app = create_app(os.getenv('ENVIRONMENT'))
 
 
