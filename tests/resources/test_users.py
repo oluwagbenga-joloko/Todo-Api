@@ -1,6 +1,6 @@
-from api.models import User
+from api.models import User, db
 from ..base import BaseTestCase
-
+from api.util import generate_token
 
 class UsersTestCase(BaseTestCase):
 

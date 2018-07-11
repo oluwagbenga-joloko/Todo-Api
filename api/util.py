@@ -22,8 +22,8 @@ def jwt_required(f):
         if not auth_header: 
             return {"message": "no authorization token provided"}, 400
         
-        if auth_header.split(' ')[0].lower() == "bearer":
-            return {"message": "invalid Authorization header, authorization header should begin with Bearer"}
+        if auth_header.split(' ')[0].lower() != "bearer":
+            return {"message": "invalid Authorization header, authorization header should begin with Bearer"}, 400
         
         auth_token = auth_header.split(' ')[1]
         secret = current_app.config.get("SECRET_KEY")
@@ -45,3 +45,4 @@ def generate_token(user):
                          "exp": datetime.utcnow() + timedelta(hours=24)},
                           current_app.config.get("SECRET_KEY"), algorithm='HS256')
     return token.decode()
+

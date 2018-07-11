@@ -20,6 +20,7 @@ class DevelopementConfig(Config):
 class TestConfig(Config):
      SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI_TEST')
      TESTING = True
+     SECRET_KEY = 'secret'
 
 
 app_config = {
