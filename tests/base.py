@@ -1,6 +1,5 @@
 from flask_testing import TestCase
 import os 
-# import pdb; pdb.set_trace()
 from api.main import create_flask_app
 from api.models import db
 

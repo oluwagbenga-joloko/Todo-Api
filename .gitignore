@@ -5,3 +5,9 @@ settings.json
 __pycache__/
 .cache
 .pytest_cache/
+venv/
+.idea/
+coverage_html/
+.coverage
+.DS_Store
+.gitingore

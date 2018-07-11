@@ -7,10 +7,13 @@ load_dotenv(env_path)
 # import pdb; pdb.set_trace()
 
 class Config():
+    DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI_PROD')
     SQLALCHEMY_TRACK_MODIFICATIONS=False
+    SECRET_KEY = os.getenv('SECRET_KEY')
 
-class DevelopementConfig():
+class DevelopementConfig(Config):
+     DEBUG = True
      SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI_DEV')
      SQLALCHEMY_TRACK_MODIFICATIONS=True
      
