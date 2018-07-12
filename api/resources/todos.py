@@ -14,7 +14,7 @@ class TodoListResource(Resource):
         try:
             todo_schema.load(payload)
         except ValidationError as err:
-            return err.messages, 400
+            return {"message": "validation failed", "errors": err.messages}, 422
 
         todo = Todo(title=payload["title"], user_id=g.current_user["id"])
         todo.save()
@@ -69,7 +69,7 @@ class TodoResource(Resource):
         try:
             todo_schema.load(payload)
         except ValidationError as err:
-            return err.messages, 400
+            return {"message": "validation failed", "errors": err.messages}, 422
         
         todo.title = payload["title"]
         todo.save()

@@ -14,8 +14,8 @@ class ModelOpsMixin(db.Model):
     __abstract__= True
 
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement='auto')
-    created_at = db.Column(db.DateTime(), default=datetime.now)
-    updated_at = db.Column(db.DateTime(), default=datetime.now, onupdate=datetime.now)
+    created_at = db.Column(db.DateTime(), default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime(), default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def serialize(self):
         return { column_name: getattr(self, column_name) for column_name in self.__mapper__.c.keys() }
@@ -45,6 +45,12 @@ class Todo(ModelOpsMixin):
 
     def __repr__(self):
         return '<User %r>' % self.title
+
+class TodoItem(ModelOpsMixin):
+    content = db.Column(db.String(), nullable=False)
+    complete = db.Column(db.Boolean, nullable=False, default=False)
+    todo_id = db.Column(db.Integer, db.ForeignKey('todo.id'), nullable=False)
+    todo = db.relationship('Todo', backref=db.backref('todo_item'))
 
 
 class User(ModelOpsMixin):
@@ -89,6 +95,13 @@ class SchemaOpsMixin(Schema):
 class TodoSchema(SchemaOpsMixin):
 
     title = fields.String(required=True, validate=must_not_be_blank)
+    user_id = fields.Integer(dump_only=True)
+
+class TodoItemSchema(SchemaOpsMixin):
+    content = fields.String(required=True, validate=must_not_be_blank)
+    complete = fields.Boolean()
+    todo_id = fields.Integer(dump_only=True)
+
 
 class UserSchema(SchemaOpsMixin):
     first_name=fields.String(required=True, validate=must_not_be_blank)
@@ -101,9 +114,13 @@ class UserSchema(SchemaOpsMixin):
 
 user_schema = UserSchema()
 user_login_schema = UserSchema(only=("email", "password"))
+user_update_schema = UserSchema(partial=True)
 
 todo_schema = TodoSchema()
 todos_schema = TodoSchema(many=True)
+
+todo_item_schema = TodoItemSchema()
+todo_item_update_schema = TodoItemSchema(partial=True)
 
 
 
