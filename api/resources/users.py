@@ -26,7 +26,7 @@ class UserListResource(Resource):
         user.save()
         token = generate_token(user)
 
-        return {"message": "user created", "token": token}, 201
+        return {"message": "user created", "token": token, "user": user_schema.dump(user)}, 201
 
 class UserResource(Resource):
 
@@ -34,7 +34,12 @@ class UserResource(Resource):
     @jwt_required
     def put(self, user_id):
         payload = request.get_json()
-        if user_id != g.current_user["id"]:
+        user = User.query.get(user_id)
+
+        if not user:
+            return {"message": "user does not exist"}, 404
+
+        if user.id != g.current_user["id"]:
             return {"message": "unauthorized"}, 401
         try:
             data = user_update_schema.load(payload)
@@ -44,18 +49,13 @@ class UserResource(Resource):
         if "email" in data:
             existing_user = User.query.filter_by(email=data["email"]).first()
             if existing_user: 
-                return {"message": "user with email already exists"}, 400
-
-        user = User.query.get(user_id)
-
-        if not user:
-            return {"message": "user does not exist"}, 404
+                return {"message": "user with email already exists"}, 409
 
         for value in data:
             setattr(user, value, data[value])
         user.save()
     
-        return {"message": "user updated", "user": user_schema.dump(user)}, 201
+        return {"message": "user updated", "user": user_schema.dump(user)}, 200
 
 
 class AuthResource(Resource):

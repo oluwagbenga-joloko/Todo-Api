@@ -43,6 +43,7 @@ class Todo(ModelOpsMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('todos', lazy=True))
 
+
     def __repr__(self):
         return '<User %r>' % self.title
 
@@ -50,7 +51,7 @@ class TodoItem(ModelOpsMixin):
     content = db.Column(db.String(), nullable=False)
     complete = db.Column(db.Boolean, nullable=False, default=False)
     todo_id = db.Column(db.Integer, db.ForeignKey('todo.id'), nullable=False)
-    todo = db.relationship('Todo', backref=db.backref('todo_item'))
+    todo = db.relationship('Todo', backref=db.backref('todo_items'))
 
 
 class User(ModelOpsMixin):
@@ -91,16 +92,18 @@ class SchemaOpsMixin(Schema):
     created_at = fields.DateTime(dump_only=True)
     updated_at = fields.DateTime(dump_only=True)
 
+class TodoItemSchema(SchemaOpsMixin):
+    content = fields.String(required=True, validate=must_not_be_blank)
+    complete = fields.Boolean()
+    todo_id = fields.Integer(dump_only=True)
+
 
 class TodoSchema(SchemaOpsMixin):
 
     title = fields.String(required=True, validate=must_not_be_blank)
     user_id = fields.Integer(dump_only=True)
+    todo_items = fields.Nested(TodoItemSchema, many=True)
 
-class TodoItemSchema(SchemaOpsMixin):
-    content = fields.String(required=True, validate=must_not_be_blank)
-    complete = fields.Boolean()
-    todo_id = fields.Integer(dump_only=True)
 
 
 class UserSchema(SchemaOpsMixin):
@@ -116,8 +119,9 @@ user_schema = UserSchema()
 user_login_schema = UserSchema(only=("email", "password"))
 user_update_schema = UserSchema(partial=True)
 
-todo_schema = TodoSchema()
-todos_schema = TodoSchema(many=True)
+todo_schema = TodoSchema(exclude=["todo_items"])
+todos_schema = TodoSchema(many=True, exclude=["todo_items"])
+todo_schema_include_items = TodoSchema()
 
 todo_item_schema = TodoItemSchema()
 todo_item_update_schema = TodoItemSchema(partial=True)

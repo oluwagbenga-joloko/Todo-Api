@@ -167,6 +167,80 @@ class UsersTestCase(BaseTestCase):
         self.assertIn("token", json_data)
     
 
+    def test_succesful_update_of_user(self):
+        """
+        tests succesful update of user
+        """
+        user = { 
+            "first_name": "jacob",
+            "email":"test2ii@test.com",
+        }
+        response = self.client.put(f'/api/users/{self.user_1.id}', json=user, headers=self.headers_1)
+        json_data = response.get_json()
+        self.assertStatus(response, 200)
+        self.assertEqual(json_data["message"], "user updated")
+        self.assertEqual(json_data["user"]["first_name"], user["first_name"])
+        self.assertEqual(json_data["user"]["email"], user["email"])
+    
+    def test_update_of_non_existent_user(self):
+        """
+        tests update non existent user
+        """
+        user = { 
+            "first_name": "jacob",
+            "email":"test2ii@test.com",
+        }
+        response = self.client.put(f'/api/users/99999999', json=user, headers=self.headers_1)
+        json_data = response.get_json()
+        self.assertStatus(response, 404)
+        self.assertEqual(json_data["message"], "user does not exist")
+    
+    def test_update_user_with_token_of_diffrent_user(self):
+        """
+        tests update user with diffrent user token
+        """
+        user = { 
+            "first_name": "jacob",
+            "email":"test2ii@test.com",
+        }
+        response = self.client.put(f'/api/users/{self.user_1.id}', json=user, headers=self.headers_2)
+        json_data = response.get_json()
+        self.assertStatus(response, 401)
+        self.assertEqual(json_data["message"], "unauthorized")
+    
+    def test_update_user_with_empty_fields(self):
+        """
+        test update use with empty first name field
+        """
+        
+        user = { 
+            "first_name": "",
+            "email":"test2ii@test.com",
+        }
+        response = self.client.put(f'/api/users/{self.user_1.id}', json=user, headers=self.headers_1)
+        json_data = response.get_json()
+        self.assertStatus(response, 422)
+        self.assertEqual(json_data["message"], "validation failed")
+    
+    def test_update_of_user_with_email_that_exists(self):
+        """
+        tests update user with email that exists 
+        """
+        user = { 
+            "first_name": "jacob",
+            "email": self.user_2.email,
+        }
+        response = self.client.put(f'/api/users/{self.user_1.id}', json=user, headers=self.headers_1)
+        json_data = response.get_json()
+        self.assertStatus(response, 409)
+        self.assertEqual(json_data["message"], "user with email already exists")
+       
+        
+
+
+        
+    
+
 
 
 

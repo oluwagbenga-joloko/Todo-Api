@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import request, jsonify, g
 from marshmallow import ValidationError
-from ..models import Todo , todo_schema, todos_schema
+from ..models import Todo , todo_schema, todos_schema, todo_schema_include_items
 from ..util import validate_request, jwt_required
 
 
@@ -39,7 +39,7 @@ class TodoResource(Resource):
         if todo.user_id != user_id:
             return {"message": "unauthorized"}, 401
         
-        return {"message": "todo retrieved", "todo": todo_schema.dump(todo)}, 200
+        return {"message": "todo retrieved", "todo": todo_schema_include_items.dump(todo)}, 200
     
     @jwt_required
     def delete(self, todo_id):

@@ -1,7 +1,7 @@
 import json
 import jwt
 from ..base import BaseTestCase
-from api.models import Todo, User, db
+from api.models import Todo, User, db, TodoItem
 from api.util import generate_token
 from datetime import datetime, timedelta
 
@@ -130,6 +130,25 @@ class TodosTestCase(BaseTestCase):
         self.assert200(response)
         self.assertEqual(json_data["message"], "todo retrieved")
         self.assertEqual(json_data["todo"]["title"], todo_1.title)
+        self.assertEqual(len(json_data["todo"]["todo_items"]), 0)
+    
+    def test_fetch_single_todo_successfully_includes_todo_items(self):
+        """
+        tests getting single todos includes todo items
+        """
+        todo_1 = Todo(title="test", user_id=self.user_1.id)
+        todo_2 = Todo(title="test2", user_id=self.user_1.id)
+        todo_item_1 = TodoItem(content="testing")
+        todo_1.todo_items.append(todo_item_1)
+        todo_1.save()
+        todo_2.save()
+
+        response = self.client.get(f'api/todos/{todo_1.id}', headers=self.headers_1)
+        json_data = response.get_json()
+        self.assert200(response)
+        self.assertEqual(json_data["message"], "todo retrieved")
+        self.assertEqual(json_data["todo"]["title"], todo_1.title)
+        self.assertEqual(len(json_data["todo"]["todo_items"]), 1)
     
     def test_fetch_no_existent_todo(self):
         """

@@ -1,5 +1,5 @@
 import os
-from api.main import create_flask_app
+from api import create_flask_app
 
 app = create_flask_app(os.getenv('ENVIRONMENT'))
 
