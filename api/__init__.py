@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Api
 from flask_migrate import Migrate
 
@@ -18,8 +18,8 @@ def create_flask_app(environment):
     api = Api(app)
    
     @app.route('/')
-    def hello_world():
-        return 'Hello, World!'
+    def index():
+        return "Welcome to Todo API"
 
     api.add_resource(TodoListResource, "/api/todos")
     api.add_resource(TodoResource, "/api/todos/<int:todo_id>")
