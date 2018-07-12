@@ -97,7 +97,9 @@ class TodosTestCase(BaseTestCase):
         """
         todo = {"title": ""}
         response = self.client.post('/api/todos', json=todo, headers=self.headers_1)
-        self.assertStatus(response, 400)
+        json_data = response.get_json()
+        self.assertStatus(response, 422)
+        self.assertEqual(json_data["message"], "validation failed")
     
 
     def test_fetch_all_todos(self):
