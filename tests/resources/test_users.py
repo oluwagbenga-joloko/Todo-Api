@@ -4,7 +4,33 @@ from api.util import generate_token
 
 class UsersTestCase(BaseTestCase):
 
-    def test__succesful_creation_of_users(self):
+    def setUp(self):
+        db.drop_all()
+        db.create_all()
+    
+        self.user_1_data = dict(
+            first_name="existing_first_name",
+            last_name="existing_last_name",
+            password= "existing_password",
+            email="test1@yahoo.com"
+        )
+        self.user_2_data = dict(
+            first_name="existing_first_name",
+            last_name="existing_last_name",
+            password= "existin_password",
+            email="test2@yahoo.com"
+        )
+        self.user_1 = User(**self.user_1_data)
+        self.user_2 = User(**self.user_2_data)
+
+        self.user_1.save()
+        self.user_2.save()
+        self.token_1 = generate_token(self.user_1)
+        self.token_2 = generate_token(self.user_2)
+        self.headers_1 = { "Authorization": f"Bearer {self.token_1}"}
+        self.headers_2 = { "Authorization": f"Bearer {self.token_2}"}
+
+    def test_succesful_creation_of_users(self):
         """
         tess succesful creation of users
         """
@@ -83,16 +109,9 @@ class UsersTestCase(BaseTestCase):
         test user login without email or password
         """
 
-        existing_user = User(
-            first_name="existing_first_name",
-            last_name="existing_last_name",
-            password= "existing_password",
-            email="test@yahoo.com"
-        )
-        existing_user.save()
         user_login_details = { 
-            "email":"",
-            "password":""
+            "email": "",
+            "password": ""
         }
         response = self.client.post('/api/users/login', json=user_login_details)
         json_data = response.get_json()
@@ -108,15 +127,8 @@ class UsersTestCase(BaseTestCase):
         test user login with wrong email
         """
 
-        existing_user = User(
-            first_name="existing_first_name",
-            last_name="existing_last_name",
-            password= "existing_password",
-            email="test@yahoo.com"
-        )
-        existing_user.save()
         user_login_details = { 
-            "email": "test2@yahoo.com",
+            "email": "tesddfdfdft2@yahoo.com",
             "password": "existing_password"
         }
         response = self.client.post('/api/users/login', json=user_login_details)
@@ -129,17 +141,9 @@ class UsersTestCase(BaseTestCase):
         """
         test user login with wrong password
         """
-
-        existing_user = User(
-            first_name="existing_first_name",
-            last_name="existing_last_name",
-            password= "existing_password",
-            email="test@yahoo.com"
-        )
-        existing_user.save()
         user_login_details = { 
             "email": "test2@yahoo.com",
-            "password": "existin_password"
+            "password": "existdfdfin_password"
         }
         response = self.client.post('/api/users/login', json=user_login_details)
         json_data = response.get_json()
@@ -152,16 +156,9 @@ class UsersTestCase(BaseTestCase):
         test user login with correct email and password
         """
 
-        existing_user = User(
-            first_name="existing_first_name",
-            last_name="existing_last_name",
-            password= "existing_password",
-            email="test@yahoo.com"
-        )
-        existing_user.save()
         user_login_details = { 
-            "email": "test@yahoo.com",
-            "password": "existing_password"
+            "email": self.user_1_data["email"],
+            "password": self.user_1_data["password"]
         }
         response = self.client.post('/api/users/login', json=user_login_details)
         json_data = response.get_json()
