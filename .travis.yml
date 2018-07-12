@@ -1,0 +1,13 @@
+language: python
+python:
+ - "3.6"
+services:
+ - postgresql
+install:
+ - pip install -r requirements.txt
+before_script:
+ - psql -c 'create database travis_ci_test;' -U postgres
+script:
+ - coverage run -m pytest
+after_success:
+ - coveralls
