@@ -11,3 +11,9 @@ script:
  - coverage run -m pytest
 after_success:
  - coveralls
+deploy:
+  # run migrations after success on branch develop
+  - provider: script
+    script: bash migrate.sh 
+    on:
+      branch: develop
