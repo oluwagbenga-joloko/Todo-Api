@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_restful import Api
 from flask_migrate import Migrate
 
+from .util import limiter
 from .models import db
 from .resources.todos import TodoListResource, TodoResource
 from .resources.users import UserListResource, AuthResource, UserResource
@@ -11,25 +12,27 @@ import os
 
 
 def create_flask_app(environment):
-    app = Flask(__name__)
-    app.config.from_object(app_config[environment])
-    db.init_app(app)
-    migrate = Migrate(app, db)
-    api = Api(app)
+
+	app = Flask(__name__)
+	app.config.from_object(app_config[environment])
+	db.init_app(app)
+	limiter.init_app(app)
+	migrate = Migrate(app, db)
+	api = Api(app)
    
-    @app.route('/')
-    def index():
-        return "Welcome to Todo API"
+	@app.route('/')
+	def index():
+		return "Welcome to Todo API"
 
-    api.add_resource(TodoListResource, "/api/todos")
-    api.add_resource(TodoResource, "/api/todos/<int:todo_id>")
-    api.add_resource(UserListResource, "/api/users")
-    api.add_resource(UserResource, "/api/users/<int:user_id>")
-    api.add_resource(AuthResource, '/api/users/login')
-    api.add_resource(TodoItemListResource, '/api/todos/<int:todo_id>/todo_items')
-    api.add_resource(TodoItemResource, '/api/todos/<int:todo_id>/todo_items/<int:todo_item_id>')
+	api.add_resource(TodoListResource, "/api/todos")
+	api.add_resource(TodoResource, "/api/todos/<int:todo_id>")
+	api.add_resource(UserListResource, "/api/users")
+	api.add_resource(UserResource, "/api/users/<int:user_id>")
+	api.add_resource(AuthResource, '/api/users/login')
+	api.add_resource(TodoItemListResource, '/api/todos/<int:todo_id>/todo_items')
+	api.add_resource(TodoItemResource, '/api/todos/<int:todo_id>/todo_items/<int:todo_item_id>')
 
-    return app
+	return app
 
 
 

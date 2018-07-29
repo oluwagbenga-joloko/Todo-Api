@@ -5,11 +5,13 @@ from datetime import datetime, timedelta
 from flask import request, jsonify, current_app, g
 from marshmallow import ValidationError
 from ..models import User, user_schema, user_login_schema, user_update_schema
-from ..util import validate_request, generate_token, jwt_required
+from ..util import validate_request, generate_token, jwt_required, limiter
 
 
 class UserListResource(Resource):
 
+    decorators = [limiter.limit('10 per minute')]
+    
     @validate_request
     def post(self):
         payload = request.get_json()
@@ -59,6 +61,8 @@ class UserResource(Resource):
 
 
 class AuthResource(Resource):
+
+    decorators = [limiter.limit('10 per minute')]
 
     @validate_request
     def post(self):

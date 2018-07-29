@@ -13,8 +13,11 @@ class TodoItemListResource(Resource):
     def post(self, todo_id):
         payload = request.get_json()
         todo = Todo.query.get(todo_id)
+        user_id = g.current_user["id"]
         if not todo:
             return {"message": "todo does not exist"}, 404 
+        if todo.user_id != user_id:
+            return {"message": "unauthorized"}, 401
         try:
             todo_item_schema.load(payload)
         except ValidationError as err:

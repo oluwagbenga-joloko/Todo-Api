@@ -2,6 +2,11 @@ from flask import  request, current_app, g
 from functools import wraps
 from datetime import datetime, timedelta
 import jwt
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+
+limiter = Limiter(key_func=get_remote_address, default_limits=['60 per minute'])
 
 
 def validate_request(f):

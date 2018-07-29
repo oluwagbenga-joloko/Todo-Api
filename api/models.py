@@ -50,8 +50,8 @@ class Todo(ModelOpsMixin):
 class TodoItem(ModelOpsMixin):
     content = db.Column(db.String(), nullable=False)
     complete = db.Column(db.Boolean, nullable=False, default=False)
-    todo_id = db.Column(db.Integer, db.ForeignKey('todo.id'), nullable=False)
-    todo = db.relationship('Todo', backref=db.backref('todo_items'))
+    todo_id = db.Column(db.Integer, db.ForeignKey('todo.id', ondelete="CASCADE"), nullable=False, )
+    todo = db.relationship('Todo', backref=db.backref('todo_items', passive_deletes=True))
 
 
 class User(ModelOpsMixin):
