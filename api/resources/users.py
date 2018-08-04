@@ -10,7 +10,7 @@ from ..util import validate_request, generate_token, jwt_required, limiter
 
 class UserListResource(Resource):
 
-    decorators = [limiter.limit('10 per minute')]
+    decorators = [limiter.limit('20 per minute')]
     
     @validate_request
     def post(self):
@@ -62,7 +62,7 @@ class UserResource(Resource):
 
 class AuthResource(Resource):
 
-    decorators = [limiter.limit('10 per minute')]
+    decorators = [limiter.limit('20 per minute')]
 
     @validate_request
     def post(self):

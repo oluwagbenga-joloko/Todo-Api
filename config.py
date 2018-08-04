@@ -23,11 +23,10 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI_TEST')
     TESTING = True
     SECRET_KEY = 'secret'
+    RATELIMIT_ENABLED = False
 
 class Production(Config):
     RATELIMIT_STORAGE_URL = os.getenv('RATELIMIT_STORAGE_URL')
-
-
 
 
 app_config = {
