@@ -9,10 +9,10 @@ The hosted application can be found [here](https://todo-application-api.herokuap
 ## Tech/framework used 
 * [Flask](http://flask.pocoo.org/) A web application microframework for Python.
 * [Flask-RESTful](https://flask-restful.readthedocs.io/en/latest/) An extension for Flask that adds support for quickly building REST APIs.
-* [Flask-SQLAlchemy](http://flask-sqlalchemy.pocoo.org/2.3/) An extension for Flask that add support for the [ SQLAlchemy](http://www.sqlalchemy.org/) ORM.
+* [Flask-SQLAlchemy](http://flask-sqlalchemy.pocoo.org/2.3/) An extension for Flask that adds support for the [ SQLAlchemy](http://www.sqlalchemy.org/) ORM.
 * [Marshmallow](https://marshmallow.readthedocs.io/en/3.0/) A simplified object serialization tool.
 * [Flask-Migrate](https://flask-migrate.readthedocs.io/en/latest/) An extension that handles SQLAlchemy database migrations for Flask applications. 
-* [Flask-Limiter](http://flask-limiter.readthedocs.io/en/stable/) An extension for request rate limiting Flask applications.
+* [Flask-Limiter](http://flask-limiter.readthedocs.io/en/stable/) An extension for request rate limiting for Flask applications.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
@@ -31,7 +31,7 @@ These instructions will get you a copy of the project up and running on your loc
 - create a `python 3` vitrual environment and activate it.
    
     ```bash
-    virtualenv -py=python3 venv
+    virtualenv -p python3 venv
     source venv/bin/activate
     ```
 - Install the project's requirements
