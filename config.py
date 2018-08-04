@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 env_path = path.join(path.dirname(__file__) , '.env')
 load_dotenv(env_path)
-# import pdb; pdb.set_trace()
 
 class Config():
     DEBUG = False
